@@ -1,0 +1,33 @@
+version: "3.4"
+
+#
+# Add common build settings for new targets here
+#
+x-lint: &default_linter
+  volumes:
+    - ./:/src:z
+    - ./lint:/work:z
+  build:
+    context: .
+    dockerfile: lint/Dockerfile
+    args:
+      - LINTDIR=lint/
+      - GROUP_ID=${GROUP_ID}
+      - USER_ID=${USER_ID}
+
+#
+# Services that are supported
+#
+
+services:
+  # LINTER
+  lint_all:
+    <<: *default_linter
+    container_name: lint_all
+    command:
+        bash -c "python3 lint_wrapper.py -r -d /src"
+  lint_git:
+    <<: *default_linter
+    container_name: lint_git
+    command:
+      bash -c "python3 lint_wrapper.py -g -r -d /src"
