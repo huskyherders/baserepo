@@ -13,7 +13,7 @@ from itertools import chain
 from os import path
 from typing import Iterator, List, Dict
 
-DEBUG = 1
+DEBUG = 0
 
 
 LINTERS = {
@@ -125,7 +125,7 @@ def run_linter(
         result = subprocess.run(cmd, stdout=subprocess.PIPE)
         # Check returncode
         if result.returncode != successRc:
-            res[filename] = result.stdout.decode("utf-8")
+            res[filename] = result.stdout.decode("utf-8").split("\n")
     return res
 
 
@@ -172,7 +172,7 @@ def main(dir: str = ".", recursive: bool = True, diffOnly: bool = False) -> int:
         )
         if DEBUG:
             print(filelist)
-        res.update(run_linter(program, filelist, args).split("\n"))
+        res.update(run_linter(program, filelist, args))
     # 0 is success, means no files were modified
     if res:
         print(res)
