@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+# Pre-commit hook to lint the files in the commit. 
+#
+# To enable this hook, copy it to .git/hooks/pre-commit
+
+exec make lint
