@@ -5,6 +5,7 @@ Tested on Ubuntu
 """
 import argparse
 import glob
+import os
 import re
 import subprocess
 import sys
@@ -100,7 +101,7 @@ def find_files(
                 store = False
                 break
         # filter on includes list only if it exists
-        if include is not None and filename not in includes:
+        if include is not None and filename not in include:
             store = False
         if store:
             res.append(filename)
@@ -129,11 +130,16 @@ def run_linter(
     return res
 
 
-def git_diff_results() -> List[str]:
+def git_diff_results(dir: str) -> List[str]:
     """
     Runs a git diff and returns a list of files that have been modified.
     """
-    result = subprocess.run(["git", "diff", "--name-only"], stdout=subprocess.PIPE)
+    cmd = ["git", "diff", "--name-only"]
+    # Has to be executed inside the git directory - save cur dir to switch back to.
+    curr = os.getcwd()
+    os.chdir(dir)
+    result = subprocess.run(cmd, stdout=subprocess.PIPE)
+    os.chdir(curr)
     if result.returncode != 0:
         return []
     return result.stdout.decode("utf-8").split("\n")
@@ -150,7 +156,7 @@ def main(dir: str = ".", recursive: bool = True, diffOnly: bool = False) -> int:
         fstr = "All"
     include = None
     if diffOnly:
-        include = git_diff_results()
+        include = git_diff_results(dir)
     for language in LINTERS:
         # These must be included in linter congifurations
         program = LINTERS[language]["program"]

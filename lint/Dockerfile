@@ -13,11 +13,13 @@ ENV TERM=xterm
 WORKDIR /work
 
 # Libraries installed:
+# Git for determining files that were modified.
 # wget for downloading libraries
 # python 3.7 for running lint_wrapper
 # python3-pip for installing requirements.txt
 # clang-format=9 for linting c
 RUN apt-get -y update && apt-get install -y --no-install-recommends \
+    git \
     wget \
     python3.7 \
     python3-pip \

@@ -5,10 +5,10 @@ version: "3.4"
 #
 x-lint: &default_linter
   volumes:
-    - ./:/src:z
-    - ./lint:/work:z
+    - ../:/src:z
+    - ./:/work:z
   build:
-    context: .
+    context: ../
     dockerfile: lint/Dockerfile
     args:
       - LINTDIR=lint/
