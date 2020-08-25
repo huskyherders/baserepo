@@ -10,7 +10,7 @@ RESET  := $(shell tput -Txterm sgr0)
 # A category can be added with @category
 HELP_FUN = \
     %help; \
-    while(<>) { push @{$$help{$$2 // 'options'}}, [$$1, $$3] if /^([a-zA-Z\-]+)\s*:.*\#\#(?:@([a-zA-Z\-]+))?\s(.*)$$/ }; \
+    while(<>) { push @{$$help{$$2 // 'commands'}}, [$$1, $$3] if /^([a-zA-Z\-_]+)\s*:.*\#\#(?:@([a-zA-Z\-]+))?\s(.*)$$/ }; \
     print "usage: make [target]\n\n"; \
     for (sort keys %help) { \
     print "${WHITE}$$_:${RESET}\n"; \
@@ -19,8 +19,3 @@ HELP_FUN = \
     print "  ${YELLOW}$$_->[0]${RESET}$$sep${GREEN}$$_->[1]${RESET}\n"; \
     }; \
     print "\n"; }
-
-#DEFAULT variables
-DOCKER_COMPOSE := docker-compose
-DOCKER_COMPOSE_FILE := $(ROOT_DIR)/docker-compose.yml
-MK_REPO := krom/docker-compose-makefile
